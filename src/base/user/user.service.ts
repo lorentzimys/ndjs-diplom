@@ -5,7 +5,7 @@ import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class UsersService implements IUserService {
+export class UserService implements IUserService {
   constructor(@InjectModel(User.name) private model: Model<User>) {}
 
   async create(data: Partial<User>): Promise<User> {

@@ -4,9 +4,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { AppController } from './app.controller';
+
+import { UserModule } from './base/user/user.module';
+import { HotelsModule } from './base/hotel/hotel.module';
 
 @Module({
   imports: [
@@ -27,7 +29,8 @@ import { UsersModule } from './users/users.module';
         serverApi: ServerApiVersion.v1,
       }),
     }),
-    UsersModule,
+    UserModule,
+    HotelsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
