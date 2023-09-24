@@ -1,5 +1,7 @@
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { Hotel } from './hotel.schema';
 
 @Schema()
@@ -23,5 +25,5 @@ export class HotelRoom {
   isEnabled: boolean;
 }
 
-export type HotelRoomDocument = HotelRoom & Document;
+export type HotelRoomDocument = HydratedDocument<HotelRoom>;
 export const HotelRoomSchema = SchemaFactory.createForClass(HotelRoom);
