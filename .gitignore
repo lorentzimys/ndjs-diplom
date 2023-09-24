@@ -2,6 +2,12 @@
 /dist
 /node_modules
 
+# certificates
+/cert
+
+# ENV
+.*.env
+
 # Logs
 logs
 *.log
