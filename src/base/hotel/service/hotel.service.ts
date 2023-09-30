@@ -21,17 +21,22 @@ export class HotelService implements IHotelService {
     return await hotel.save();
   }
 
-  async findById(id: ID): Promise<Hotel> {
+  async findById(id: ID): Promise<HotelDocument> {
     const hotel = await this.model.findById(id);
 
     return hotel;
   }
 
-  async search(params: SearchHotelParams): Promise<Hotel[]> {
+  async search(params: SearchHotelParams): Promise<HotelDocument[]> {
     const { limit, offset, title } = params;
+    const query = {};
+
+    if (title) {
+      query['title'] = title;
+    }
 
     const hotels = await this.model
-      .find({ title })
+      .find(query)
       .skip(offset)
       .limit(limit)
       .exec();
@@ -39,7 +44,7 @@ export class HotelService implements IHotelService {
     return hotels;
   }
 
-  async update(id: string, data: UpdateHotelParams): Promise<Hotel> {
+  async update(id: ID, data: UpdateHotelParams): Promise<HotelDocument> {
     const hotel = await this.model.findByIdAndUpdate(id, data);
 
     return hotel;

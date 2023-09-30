@@ -1,7 +1,7 @@
 interface SearchHotelParams {
   limit: number;
   offset: number;
-  title: string;
+  title?: string;
 }
 
 interface UpdateHotelParams {
