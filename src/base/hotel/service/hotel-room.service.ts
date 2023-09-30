@@ -17,7 +17,7 @@ export class HotelRoomService implements IHotelRoomService {
     return hotelRoom.save();
   }
 
-  async findById(id: string): Promise<HotelRoom> {
+  async findById(id: ID): Promise<HotelRoom> {
     const hotelRoom = await this.model.findById(id);
 
     return hotelRoom;

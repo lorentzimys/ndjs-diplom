@@ -5,14 +5,18 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { ID } from 'src/types';
 
-import { Hotel } from '../schema/hotel.schema';
+import { Hotel, HotelDocument } from '../schema/hotel.schema';
 
 @Injectable()
 export class HotelService implements IHotelService {
   constructor(@InjectModel(Hotel.name) private model: Model<Hotel>) {}
 
-  async create(data: any): Promise<Hotel> {
-    const hotel = new this.model(data);
+  async create(data: any): Promise<HotelDocument> {
+    const hotel = new this.model({
+      ...data,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
 
     return await hotel.save();
   }

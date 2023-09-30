@@ -16,4 +16,4 @@ import { HotelService, HotelRoomService } from './service';
   providers: [HotelService, HotelRoomService],
   exports: [HotelService, HotelRoomService],
 })
-export class HotelsModule {}
+export class HotelModule {}
