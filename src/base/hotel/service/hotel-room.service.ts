@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { HotelRoom } from './schemas/hotelRoom.schema';
+import { HotelRoom } from '../schema/hotelRoom.schema';
 
 @Injectable()
 export class HotelRoomService implements IHotelRoomService {

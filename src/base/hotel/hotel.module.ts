@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Hotel, HotelSchema } from './schemas/hotel.schema';
-import { HotelRoom, HotelRoomSchema } from './schemas/hotelRoom.schema';
+import { Hotel, HotelSchema } from './schema/hotel.schema';
+import { HotelRoom, HotelRoomSchema } from './schema/hotelRoom.schema';
 
-import { HotelService } from './hotel.service';
-import { HotelRoomService } from './hotel-room.service';
+import { HotelService, HotelRoomService } from './service';
 
 @Module({
   imports: [

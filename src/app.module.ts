@@ -10,6 +10,7 @@ import { AppController } from './app.controller';
 import { UserModule } from './base/user/user.module';
 import { HotelsModule } from './base/hotel/hotel.module';
 import { ReservationModule } from './base/reservation/reservation.module';
+import { SupportRequestModule } from './base/support-request/support-request.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ReservationModule } from './base/reservation/reservation.module';
     UserModule,
     HotelsModule,
     ReservationModule,
+    SupportRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

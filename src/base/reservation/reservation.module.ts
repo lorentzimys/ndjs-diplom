@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { ReservationService } from './reservation.service';
-import { Reservation, ReservationSchema } from './schemas/reservation.schema';
+import { Reservation, ReservationSchema } from './schema';
+import { ReservationService } from './service';
 
 @Module({
   imports: [
