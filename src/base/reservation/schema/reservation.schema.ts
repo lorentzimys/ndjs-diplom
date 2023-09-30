@@ -2,6 +2,7 @@ import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+import { ID } from 'src/types';
 import { User } from 'src/base/user/schemas/user.schema';
 import { Hotel } from 'src/base/hotel/schema/hotel.schema';
 
@@ -23,7 +24,12 @@ export class Reservation {
   })
   hotelId: Hotel;
 
-  @Prop({ required: true, unique: false })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Room',
+    required: true,
+    unique: false,
+  })
   roomId: ID;
 
   @Prop({ required: true, unique: false })

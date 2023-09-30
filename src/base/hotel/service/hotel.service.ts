@@ -3,6 +3,8 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
+import { ID } from 'src/types';
+
 import { Hotel } from '../schema/hotel.schema';
 
 @Injectable()
