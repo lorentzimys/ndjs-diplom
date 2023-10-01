@@ -3,16 +3,26 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { ID } from 'src/types';
+import { ID } from 'src/common/types';
+import { CreateHotelRoomDto } from 'src/common/dto/create-hotel-room.dto';
 
-import { HotelRoom } from '../schema/hotelRoom.schema';
+import { HotelRoom, HotelRoomDocument } from '../schema/hotelRoom.schema';
+import { PUBLIC_DIR } from 'src/common/constants';
+import { UpdateHotelRoomDto } from 'src/common/dto/update-hotel-room.dto';
 
 @Injectable()
 export class HotelRoomService implements IHotelRoomService {
   constructor(@InjectModel(HotelRoom.name) private model: Model<HotelRoom>) {}
 
-  async create(data: HotelRoom): Promise<HotelRoom> {
-    const hotelRoom = await new this.model(data);
+  async create(data: CreateHotelRoomDto): Promise<HotelRoomDocument> {
+    const { hotelId, description, images } = data;
+    const hotelRoom = await new this.model({
+      description,
+      images: images.map((image) => image.path.replace(PUBLIC_DIR, '')),
+      hotel: hotelId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
 
     return hotelRoom.save();
   }
@@ -28,13 +38,14 @@ export class HotelRoomService implements IHotelRoomService {
     offset,
     hotel,
     isEnabled,
-  }: SearchRoomsParams): Promise<HotelRoom[]> {
-    if (!isEnabled) {
-      return await this.model.find({ hotel });
+  }: SearchRoomsParams): Promise<HotelRoomDocument[]> {
+    if (isEnabled === undefined) {
+      return await this.model.find().populate('hotel').exec();
     }
 
     const hotelRooms = await this.model
       .find({ hotel })
+      .populate('hotel')
       .skip(offset)
       .limit(limit)
       .exec();
@@ -42,7 +53,7 @@ export class HotelRoomService implements IHotelRoomService {
     return hotelRooms;
   }
 
-  async update(id: ID, data: HotelRoom): Promise<HotelRoom> {
+  async update(id: ID, data: UpdateHotelRoomDto): Promise<HotelRoom> {
     const hotelRoom = await this.model.findByIdAndUpdate(id, data);
 
     return hotelRoom;

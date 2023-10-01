@@ -21,8 +21,8 @@ import { HotelApiModule } from './api/hotel/hotel-api.module';
     MongooseModule.forRootAsync({
       useFactory: () => ({
         uri: process.env.MONGO_URL,
-        dbName: 'hotels-booking',
-        user: 'testuser',
+        dbName: process.env.MONGO_DB_NAME,
+        user: process.env.MONGO_DB_USER,
         authMechanism: AuthMechanism.MONGODB_X509,
         ssl: true,
         tlsCertificateKeyFile: process.env.MONGO_CERT,

@@ -2,7 +2,7 @@ import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { ID } from 'src/types';
+import { ID } from 'src/common/types';
 import { User } from 'src/base/user/schemas/user.schema';
 import { Hotel } from 'src/base/hotel/schema/hotel.schema';
 
