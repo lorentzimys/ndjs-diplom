@@ -27,7 +27,7 @@ export class HotelRoomService implements IHotelRoomService {
     return hotelRoom.save();
   }
 
-  async findById(id: ID): Promise<HotelRoom> {
+  async findById(id: ID): Promise<HotelRoomDocument> {
     const hotelRoom = await this.model.findById(id);
 
     return hotelRoom;
@@ -53,7 +53,7 @@ export class HotelRoomService implements IHotelRoomService {
     return hotelRooms;
   }
 
-  async update(id: ID, data: UpdateHotelRoomDto): Promise<HotelRoom> {
+  async update(id: ID, data: UpdateHotelRoomDto): Promise<HotelRoomDocument> {
     const hotelRoom = await this.model.findByIdAndUpdate(id, data);
 
     return hotelRoom;

@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Message, SupportRequest } from '../schema';
+import { MessageDocument } from '../schema/message.schema';
 
 @Injectable()
 export class SupportRequestService {
@@ -27,20 +28,20 @@ export class SupportRequestService {
     return supportRequests;
   }
 
-  async sendMessage(data: SendMessageDto): Promise<Message> {
+  async sendMessage(data: SendMessageDto): Promise<MessageDocument> {
     const message = new this.messageModel(data);
 
     return await message.save();
   }
 
-  async getMessages(supportRequest: string): Promise<Message[]> {
+  async getMessages(supportRequest: string): Promise<MessageDocument[]> {
     const messages = await this.messageModel.find({ supportRequest });
 
     return messages;
   }
 
   subscribe(
-    handler: (supportRequest: SupportRequest, message: Message) => void,
+    handler: (supportRequest: SupportRequest, message: MessageDocument) => void,
   ): () => void {
     throw new Error('Method not implemented.');
   }

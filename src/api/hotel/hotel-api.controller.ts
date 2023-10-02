@@ -16,6 +16,7 @@ import { CreateHotelRoomDto } from '../../common/dto/create-hotel-room.dto';
 import { FilesInterceptor } from '@nestjs/platform-express/multer';
 import { HotelDocument } from 'src/base/hotel/schema/hotel.schema';
 import { UpdateHotelRoomDto } from 'src/common/dto/update-hotel-room.dto';
+import { PUBLIC_DIR } from 'src/common/constants';
 
 @Controller()
 export class HotelApiController {
@@ -116,32 +117,40 @@ export class HotelApiController {
   @Put('admin/hotel-rooms/:id')
   @UseInterceptors(FilesInterceptor('images', 10))
   async updateHotelRoom(
-    @Param('id') id: ID,
+    @Param('id') roomId: ID,
     @Body() data: UpdateHotelRoomDto,
-    @UploadedFiles() images: Array<Express.Multer.File>,
+    @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    console.log(images);
-    console.log(data);
-    // const hotelRoom = await this.hotelRoomService.update(id, data);
-    // const {
-    //   _id: id,
-    //   description,
-    //   images,
-    //   isEnabled,
-    //   hotel: { title: hotelTitle, description: hotelDescription },
-    // } = hotelRoom;
-    // const hotelId = (hotelRoom.hotel as HotelDocument)._id;
+    const images = [
+      ...data.images,
+      ...(files
+        ? files.map((image) => image.path.replace(PUBLIC_DIR, ''))
+        : []),
+    ];
+    const hotelRoom = await this.hotelRoomService.update(roomId, {
+      ...data,
+      images,
+    });
 
-    // return {
-    //   id,
-    //   description,
-    //   images,
-    //   isEnabled,
-    //   hotel: {
-    //     id: hotelId,
-    //     title: hotelTitle,
-    //     description: hotelDescription,
-    //   },
-    // };
+    const hotelRoomPopulated = await hotelRoom.populate('hotel');
+
+    const { _id: id, description, isEnabled, hotel } = hotelRoomPopulated;
+    const {
+      _id: hotelId,
+      title: hotelTitle,
+      description: hotelDescription,
+    } = hotel as HotelDocument;
+
+    return {
+      id,
+      description,
+      images,
+      isEnabled,
+      hotel: {
+        id: hotelId,
+        title: hotelTitle,
+        description: hotelDescription,
+      },
+    };
   }
 }

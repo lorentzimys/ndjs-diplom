@@ -4,14 +4,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Reservation } from '../schema';
+import { ReservationDocument } from '../schema/reservation.schema';
 
 @Injectable()
 export class ReservationService implements IReservationService {
   constructor(
-    @InjectModel(Reservation.name) private model: Model<Reservation>,
+    @InjectModel(Reservation.name) private model: Model<ReservationDocument>,
   ) {}
 
-  async addReservation(data: ReservationDto): Promise<Reservation> {
+  async addReservation(data: ReservationDto): Promise<ReservationDocument> {
     const { userId, hotelId, roomId, dateStart, dateEnd } = data;
     const roomAvailable =
       (await this.model
@@ -51,7 +52,7 @@ export class ReservationService implements IReservationService {
 
   async getReservations(
     filter: ReservationSearchOptions,
-  ): Promise<Reservation[]> {
+  ): Promise<ReservationDocument[]> {
     return await this.model.find(filter).exec();
   }
 }

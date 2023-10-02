@@ -5,6 +5,7 @@ import { Message, SupportRequest } from '../schema';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { User } from 'src/base/user/schemas/user.schema';
+import { SupportRequestDocument } from '../schema/support-request.schema';
 
 @Injectable()
 export class SupportRequestClientService
@@ -18,9 +19,12 @@ export class SupportRequestClientService
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
+  createSupportRequest(
+    data: CreateSupportRequestDto,
+  ): Promise<SupportRequestDocument> {
     throw new Error('Method not implemented.');
   }
+
   markMessagesAsRead(params: MarkMessagesAsReadDto) {
     const users = this.userModel.find({ _id: { $not: params.user } });
     this.messageModel
