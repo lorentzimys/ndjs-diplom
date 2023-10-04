@@ -16,7 +16,7 @@ export class ReservationApiController {
   ) {}
 
   @Get('client/reservations')
-  async getReservations(): Promise<ReservationDTO[]> {
+  async getClientReservations(): Promise<ReservationDTO[]> {
     const userId = mockUserId;
     const reservations = await this.reservationService.getReservations(
       {
@@ -45,8 +45,39 @@ export class ReservationApiController {
     });
   }
 
+  @Get('manager/reservations/:userId')
+  async getManagerClientReservations(
+    @Param('userId') userId: string,
+  ): Promise<ReservationDTO[]> {
+    const reservations = await this.reservationService.getReservations(
+      {
+        userId,
+      },
+      ['hotelId', 'roomId'],
+    );
+
+    return reservations.map((reservation) => {
+      const { dateStart, dateEnd } = reservation;
+      const hotel = reservation.hotelId as HotelDocument;
+      const hotelRoom = reservation.roomId as HotelRoomDocument;
+
+      return {
+        startDate: dateStart.toISOString(),
+        endDate: dateEnd.toISOString(),
+        hotelRoom: {
+          images: hotelRoom.images,
+          description: hotelRoom.description,
+        },
+        hotel: {
+          title: hotel.title,
+          description: hotel.description,
+        },
+      };
+    });
+  }
+
   @Post('client/reservations')
-  async createReservation(
+  async createClientReservation(
     @Body() data: CreateReservationDto,
   ): Promise<ReservationDTO> {
     const { startDate, endDate } = data;
@@ -84,7 +115,14 @@ export class ReservationApiController {
   }
 
   @Delete('client/reservations/:id')
-  async deleteReservation(@Param('íd') id: string): Promise<void> {
+  async deleteClientReservation(@Param('íd') id: string): Promise<void> {
     await this.reservationService.removeReservation(id);
+  }
+
+  @Delete('manager/reservations/:userId')
+  async deleteManagerClientReservation(
+    @Param('userId') userId: string,
+  ): Promise<void> {
+    await this.reservationService.removeReservation(userId);
   }
 }
