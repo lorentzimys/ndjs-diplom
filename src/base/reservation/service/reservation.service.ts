@@ -41,7 +41,14 @@ export class ReservationService implements IReservationService {
 
   async getReservations(
     filter: ReservationSearchOptions,
+    expand?: string[],
   ): Promise<ReservationDocument[]> {
-    return await this.reservationModel.find(filter).exec();
+    const query = this.reservationModel.find(filter);
+
+    if (expand) {
+      query.populate(expand);
+    }
+
+    return await query.exec();
   }
 }

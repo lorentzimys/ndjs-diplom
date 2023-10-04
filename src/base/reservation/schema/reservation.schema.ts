@@ -5,6 +5,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ID } from 'src/common/types';
 import { User } from 'src/base/user/schemas/user.schema';
 import { Hotel } from 'src/base/hotel/schema/hotel.schema';
+import { HotelRoom } from 'src/base/hotel/schema';
 
 @Schema()
 export class Reservation {
@@ -26,11 +27,11 @@ export class Reservation {
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
-    ref: 'Room',
+    ref: 'HotelRoom',
     required: true,
     unique: false,
   })
-  roomId: ID;
+  roomId: HotelRoom;
 
   @Prop({
     type: MongooseSchema.Types.Date,

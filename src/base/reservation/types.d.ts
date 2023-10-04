@@ -8,8 +8,8 @@ interface ReservationDto {
 
 interface ReservationSearchOptions {
   userId: ID;
-  dateStart: Date;
-  dateEnd: Date;
+  dateStart?: Date;
+  dateEnd?: Date;
 }
 interface IReservationService {
   addReservation(data: ReservationDto): Promise<Reservation>;
