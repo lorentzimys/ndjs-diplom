@@ -8,10 +8,10 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 
 import { UserModule } from './base/user/user.module';
-import { ReservationModule } from './base/reservation/reservation.module';
 import { SupportRequestModule } from './base/support-request/support-request.module';
 
 import { HotelApiModule } from './api/hotel/hotel-api.module';
+import { ReservationApiModule } from './api/reservation/reservation.module';
 
 @Module({
   imports: [
@@ -33,9 +33,9 @@ import { HotelApiModule } from './api/hotel/hotel-api.module';
       }),
     }),
     UserModule,
-    ReservationModule,
     SupportRequestModule,
     HotelApiModule,
+    ReservationApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

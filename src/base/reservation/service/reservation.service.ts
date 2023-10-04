@@ -9,50 +9,39 @@ import { ReservationDocument } from '../schema/reservation.schema';
 @Injectable()
 export class ReservationService implements IReservationService {
   constructor(
-    @InjectModel(Reservation.name) private model: Model<ReservationDocument>,
+    @InjectModel(Reservation.name)
+    private reservationModel: Model<ReservationDocument>,
   ) {}
 
   async addReservation(data: ReservationDto): Promise<ReservationDocument> {
     const { userId, hotelId, roomId, dateStart, dateEnd } = data;
-    const roomAvailable =
-      (await this.model
-        .countDocuments({
-          userId,
-          roomId,
-          hotelId,
-          $or: [
-            {
-              $and: [
-                { endDate: { $gte: dateStart } },
-                { endDate: { $lte: dateEnd } },
-              ],
-            },
-            {
-              $and: [
-                { startDate: { $gte: dateStart } },
-                { startDate: { $lte: dateEnd } },
-              ],
-            },
-          ],
-        })
-        .exec()) === 0;
+
+    const countDocuments = await this.reservationModel.countDocuments({
+      userId,
+      roomId,
+      hotelId,
+      dateStart: { $lte: new Date(dateEnd).toISOString() },
+      dateEnd: { $gte: new Date(dateStart).toISOString() },
+    });
+
+    const roomAvailable = countDocuments === 0;
 
     if (!roomAvailable) {
       throw new Error('Room is not available');
     }
 
-    const reservation = new this.model(data);
+    const reservation = new this.reservationModel(data);
 
     return await reservation.save();
   }
 
   async removeReservation(id: string): Promise<void> {
-    await this.model.findByIdAndDelete(id);
+    await this.reservationModel.findByIdAndDelete(id);
   }
 
   async getReservations(
     filter: ReservationSearchOptions,
   ): Promise<ReservationDocument[]> {
-    return await this.model.find(filter).exec();
+    return await this.reservationModel.find(filter).exec();
   }
 }

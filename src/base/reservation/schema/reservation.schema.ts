@@ -12,7 +12,7 @@ export class Reservation {
     type: MongooseSchema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true,
+    unique: false,
   })
   userId: User;
 
@@ -20,7 +20,7 @@ export class Reservation {
     type: MongooseSchema.Types.ObjectId,
     ref: 'Hotel',
     required: true,
-    unique: true,
+    unique: false,
   })
   hotelId: Hotel;
 
@@ -32,10 +32,18 @@ export class Reservation {
   })
   roomId: ID;
 
-  @Prop({ required: true, unique: false })
+  @Prop({
+    type: MongooseSchema.Types.Date,
+    required: true,
+    unique: false,
+  })
   dateStart: Date;
 
-  @Prop({ required: true, unique: false })
+  @Prop({
+    type: MongooseSchema.Types.Date,
+    required: true,
+    unique: false,
+  })
   dateEnd: Date;
 }
 
