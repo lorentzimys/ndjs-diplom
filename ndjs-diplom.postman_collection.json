@@ -1,0 +1,416 @@
+{
+	"info": {
+		"_postman_id": "67aa47f5-6398-4675-b139-24a39856f037",
+		"name": "ndjs-diplom",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "924749"
+	},
+	"item": [
+		{
+			"name": "Hotels",
+			"item": [
+				{
+					"name": "getHotelRooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/common/hotel-rooms",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"common",
+								"hotel-rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getHotelRoom",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/common/hotel-rooms",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"common",
+								"hotel-rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getHotels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotels?limit=2&offset=1",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"hotels"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "offset",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createHotel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "{{$randomCompanyName}}",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "{{$randomLoremText}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotels",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"hotels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addHotelRoom",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "{{$randomLoremText}}",
+									"type": "text"
+								},
+								{
+									"key": "hotelId",
+									"value": "6517cbb3768109688acaccbf",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/Users/lorentzimys/Downloads/2021-04-30 20-15-02.JPG"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotel-rooms",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"hotel-rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateHotel",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "{{$randomCompanyName}}",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "{{$randomLoremText}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotels/6518495e1456581581fe7e64?",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"hotels",
+								"6518495e1456581581fe7e64"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateHotelRoom",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/Users/lorentzimys/Downloads/2022-02-09 12.27.21.svg"
+								},
+								{
+									"key": "images",
+									"value": "/upload/2021-04-30 20-15-028822.JPG",
+									"type": "text"
+								},
+								{
+									"key": "hotelId",
+									"value": "6517cbb3768109688acaccbf",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "{{$randomLoremParagraph}}",
+									"type": "text"
+								},
+								{
+									"key": "isEnabled",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"value": "/upload/2021-04-30 20-15-028824.JPG",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotel-rooms/651ad78d1c2c4bc21f190bed",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"hotel-rooms",
+								"651ad78d1c2c4bc21f190bed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservations",
+			"item": [
+				{
+					"name": "createReservation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "hotelRoom",
+									"value": "651ad78d1c2c4bc21f190bed",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "2022-01-01",
+									"type": "text"
+								},
+								{
+									"key": "endDate",
+									"value": "2022-01-28",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/client/reservations",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"client",
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getReservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/client/reservations",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"client",
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getManagerClientReservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/manager/reservations/:userId",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"manager",
+								"reservations",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "650ebfd5e103168079a1d653"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteReservation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/client/reservations/:id",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"client",
+								"reservations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "651afeb82195480758998f83"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteManagerClientReservation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/manager/reservations/:userId",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"manager",
+								"reservations",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "651afeb82195480758998f83"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
