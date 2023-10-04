@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { HotelDocument } from 'src/base/hotel/schema/hotel.schema';
 import { HotelRoomDocument } from 'src/base/hotel/schema/hotelRoom.schema';
 import { HotelRoomService } from 'src/base/hotel/service';
@@ -81,5 +81,10 @@ export class ReservationApiController {
         description: hotel.description,
       },
     };
+  }
+
+  @Delete('client/reservations/:id')
+  async deleteReservation(@Param('íd') id: string): Promise<void> {
+    await this.reservationService.removeReservation(id);
   }
 }
