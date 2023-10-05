@@ -12,6 +12,7 @@ import { SupportRequestModule } from './base/support-request/support-request.mod
 
 import { HotelApiModule } from './api/hotel/hotel-api.module';
 import { ReservationApiModule } from './api/reservation/reservation.module';
+import { AuthModule } from './api/auth/auth.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ReservationApiModule } from './api/reservation/reservation.module';
     SupportRequestModule,
     HotelApiModule,
     ReservationApiModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
