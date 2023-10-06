@@ -14,6 +14,7 @@ import { UserService } from 'src/base/user/user.service';
 import { LoginResponseDTO } from 'src/common/dto/login-response.dto';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { LoginGuard } from './guards/login.auth.guard';
+import { USER_ROLE } from 'src/common/enums';
 
 @Controller()
 export class AuthController {
@@ -30,6 +31,30 @@ export class AuthController {
       name: user.name,
       contactPhone: user.contactPhone,
     }));
+  }
+
+  private async createUser(
+    body: CreateUserDTO,
+    role: UserRole,
+  ): Promise<UserDTO> {
+    const saltOrRounds = 10;
+    const passwordHash = await bcrypt.hash(body.password, saltOrRounds);
+
+    const user = await this.userService.create({
+      email: body.email,
+      name: body.name,
+      passwordHash,
+      role,
+      contactPhone: body.contactPhone,
+    });
+
+    return {
+      id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      contactPhone: user.contactPhone,
+    };
   }
 
   @UseGuards(LoginGuard)
@@ -66,24 +91,16 @@ export class AuthController {
   }
 
   @Post('admin/users')
-  async createUser(@Body() body: CreateUserDTO): Promise<UserDTO> {
-    const saltOrRounds = 10;
-    const passwordHash = await bcrypt.hash(body.password, saltOrRounds);
+  async createAdminUser(@Body() body: CreateUserDTO): Promise<UserDTO> {
+    const createdUser = await this.createUser(body, USER_ROLE.ADMIN);
 
-    const user = await this.userService.create({
-      email: body.email,
-      name: body.name,
-      passwordHash,
-      role: body.role,
-      contactPhone: body.contactPhone,
-    });
+    return createdUser;
+  }
 
-    return {
-      id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      contactPhone: user.contactPhone,
-    };
+  @Post('client/register')
+  async createClientUser(@Body() body: CreateUserDTO): Promise<UserDTO> {
+    const createdUser = await this.createUser(body, USER_ROLE.CLIENT);
+
+    return createdUser;
   }
 }

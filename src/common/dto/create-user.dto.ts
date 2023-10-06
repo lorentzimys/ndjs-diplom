@@ -3,5 +3,4 @@ export class CreateUserDTO {
   password: string;
   name: string;
   contactPhone: string;
-  role: UserRole;
 }
