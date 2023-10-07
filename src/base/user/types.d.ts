@@ -7,10 +7,18 @@ interface SearchUserParams {
 }
 
 interface IUserService {
-  create(data: Partial<User>): Promise<User>;
-  findById(id: ID): Promise<User>;
-  findByEmail(email: string): Promise<User>;
-  findAll(params: SearchUserParams): Promise<User[]>;
+  create(data: Partial<IUser>): Promise<IUser>;
+  findById(id: ID): Promise<IUser>;
+  findByEmail(email: string): Promise<IUser>;
+  findAll(params: SearchUserParams): Promise<IUser[]>;
 }
+
+type IUser = {
+  name: string;
+  email: string;
+  passwordHash: string;
+  contactPhone: string;
+  role: UserRole;
+};
 
 type UserRole = 'admin' | 'client' | 'manager';

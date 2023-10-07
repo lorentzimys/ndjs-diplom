@@ -8,6 +8,7 @@ import {
   Put,
   UseInterceptors,
   UploadedFiles,
+  Request,
 } from '@nestjs/common';
 import { HotelService, HotelRoomService } from 'src/base/hotel/service';
 import { ID } from 'src/common/types';
@@ -17,6 +18,8 @@ import { FilesInterceptor } from '@nestjs/platform-express/multer';
 import { HotelDocument } from 'src/base/hotel/schema/hotel.schema';
 import { UpdateHotelRoomDto } from 'src/common/dto/update-hotel-room.dto';
 import { PUBLIC_DIR } from 'src/common/constants';
+import { HotelRoomDTO } from 'src/common/dto/hotel-room.dto';
+import { USER_ROLE } from 'src/common/enums';
 
 @Controller()
 export class HotelApiController {
@@ -26,24 +29,35 @@ export class HotelApiController {
   ) {}
 
   @Get('common/hotel-rooms')
-  async getHotelRooms(@Query() query: GetHotelRoomsQueryParams) {
-    const hotelRooms = await this.hotelRoomService.search(query);
+  async getHotelRooms(
+    @Query() query: SearchRoomsParams,
+    @Request() req: ObjectWith<'user', IUser>,
+  ): Promise<HotelRoomDTO[]> {
+    const { user } = req;
+    let { isEnabled } = query;
 
-    return hotelRooms.map(
-      ({ _id: id, description, images, isEnabled, hotel }) => ({
-        id,
-        description,
-        images,
-        isEnabled,
-        hotel: hotel
-          ? {
-              id: (hotel as HotelDocument)._id,
-              title: hotel.title,
-              description: hotel.description,
-            }
-          : null,
-      }),
-    );
+    if (!user || user?.role == USER_ROLE.CLIENT) {
+      isEnabled = true;
+    }
+
+    const hotelRooms = await this.hotelRoomService.search({
+      ...query,
+      isEnabled,
+    });
+
+    return hotelRooms.map(({ _id, description, images, isEnabled, hotel }) => ({
+      id: _id.toString(),
+      description,
+      images,
+      isEnabled,
+      hotel: hotel
+        ? {
+            id: (hotel as HotelDocument)._id.toString(),
+            title: hotel.title,
+            description: hotel.description,
+          }
+        : null,
+    }));
   }
 
   @Get('common/hotel-rooms/:id')

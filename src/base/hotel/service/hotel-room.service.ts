@@ -39,16 +39,17 @@ export class HotelRoomService implements IHotelRoomService {
     hotel,
     isEnabled,
   }: SearchRoomsParams): Promise<HotelRoomDocument[]> {
-    if (isEnabled === undefined) {
-      return await this.model.find().populate('hotel').exec();
+    const query = this.model.find({ hotel, isEnabled });
+
+    if (offset) {
+      query.skip(offset);
     }
 
-    const hotelRooms = await this.model
-      .find({ hotel })
-      .populate('hotel')
-      .skip(offset)
-      .limit(limit)
-      .exec();
+    if (limit) {
+      query.limit(limit);
+    }
+
+    const hotelRooms = await query.populate('hotel').exec();
 
     return hotelRooms;
   }

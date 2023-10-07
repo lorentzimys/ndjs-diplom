@@ -3,7 +3,7 @@ import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
-export class User {
+export class User implements IUser {
   @Prop({ required: true, unique: true })
   email: string;
 

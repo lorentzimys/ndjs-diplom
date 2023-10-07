@@ -17,10 +17,10 @@ interface IHotelService {
 }
 
 interface SearchRoomsParams {
-  limit: number;
-  offset: number;
   hotel: ID;
-  isEnabled?: boolean;
+  isEnabled: boolean;
+  limit?: number;
+  offset?: number;
 }
 
 interface IHotelRoomService {
