@@ -2,8 +2,10 @@ import { Model } from 'mongoose';
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+
+import { User } from '@base/user/schemas/user.schema';
+
 import { Message, SupportRequest } from '../schema';
-import { User } from 'src/base/user/schemas/user.schema';
 
 @Injectable()
 export class SupportRequestEmployeeService

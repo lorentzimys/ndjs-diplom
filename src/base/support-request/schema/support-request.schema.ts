@@ -2,7 +2,8 @@ import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { User } from 'src/base/user/schemas/user.schema';
+import { User } from '@base/user/schemas/user.schema';
+
 import { Message } from './message.schema';
 
 @Schema()

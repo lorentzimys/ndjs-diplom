@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { Hotel, HotelSchema } from './schema/hotel.schema';
 import { HotelRoom, HotelRoomSchema } from './schema/hotelRoom.schema';
-
 import { HotelService, HotelRoomService } from './service';
 
 @Module({

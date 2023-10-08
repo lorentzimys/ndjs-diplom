@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { HotelDocument } from 'src/base/hotel/schema/hotel.schema';
-import { HotelRoomDocument } from 'src/base/hotel/schema/hotelRoom.schema';
-import { HotelRoomService } from 'src/base/hotel/service';
-import { ReservationService } from 'src/base/reservation/service';
-import { CreateReservationDto } from 'src/common/dto/reservation/create-reservation.dto';
-import { ReservationDTO } from 'src/common/dto/reservation/reservation.dto';
+
+import { ReservationDTO, CreateReservationDTO } from '@common/dto';
+
+import { HotelDocument } from '@base/hotel/schema/hotel.schema';
+import { HotelRoomDocument } from '@base/hotel/schema/hotelRoom.schema';
+import { HotelRoomService } from '@base/hotel/service';
+import { ReservationService } from '@base/reservation/service';
 
 const mockUserId = '650ebfd5e103168079a1d653';
 
@@ -78,7 +79,7 @@ export class ReservationApiController {
 
   @Post('client/reservations')
   async createClientReservation(
-    @Body() data: CreateReservationDto,
+    @Body() data: CreateReservationDTO,
   ): Promise<ReservationDTO> {
     const { startDate, endDate } = data;
     const userId = mockUserId;
@@ -88,7 +89,7 @@ export class ReservationApiController {
 
     const hotel = hotelRoom.hotel as HotelDocument;
     const roomId = hotelRoom._id;
-    const hotelId = hotel._id;
+    const hotelId = (hotel as HotelDocument)._id;
 
     const { dateStart, dateEnd } = await this.reservationService.addReservation(
       {

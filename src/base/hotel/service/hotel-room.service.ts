@@ -3,18 +3,16 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { ID } from 'src/common/types';
-import { CreateHotelRoomDto } from 'src/common/dto/create-hotel-room.dto';
+import { PUBLIC_DIR } from '@common/constants';
+import { ID } from '@common/types';
 
 import { HotelRoom, HotelRoomDocument } from '../schema/hotelRoom.schema';
-import { PUBLIC_DIR } from 'src/common/constants';
-import { UpdateHotelRoomDto } from 'src/common/dto/update-hotel-room.dto';
 
 @Injectable()
 export class HotelRoomService implements IHotelRoomService {
   constructor(@InjectModel(HotelRoom.name) private model: Model<HotelRoom>) {}
 
-  async create(data: CreateHotelRoomDto): Promise<HotelRoomDocument> {
+  async create(data: CreateHotelRoomParams): Promise<HotelRoomDocument> {
     const { hotelId, description, images } = data;
     const hotelRoom = await new this.model({
       description,
@@ -22,13 +20,13 @@ export class HotelRoomService implements IHotelRoomService {
       hotel: hotelId,
       createdAt: new Date(),
       updatedAt: new Date(),
-    });
+    }).save();
 
-    return hotelRoom.save();
+    return await hotelRoom.populate('hotel');
   }
 
   async findById(id: ID): Promise<HotelRoomDocument> {
-    const hotelRoom = await this.model.findById(id);
+    const hotelRoom = await this.model.findById(id).populate('hotel');
 
     return hotelRoom;
   }
@@ -54,9 +52,12 @@ export class HotelRoomService implements IHotelRoomService {
     return hotelRooms;
   }
 
-  async update(id: ID, data: UpdateHotelRoomDto): Promise<HotelRoomDocument> {
+  async update(
+    id: ID,
+    data: UpdateHotelRoomParams,
+  ): Promise<HotelRoomDocument> {
     const hotelRoom = await this.model.findByIdAndUpdate(id, data);
 
-    return hotelRoom;
+    return await hotelRoom.populate('hotel');
   }
 }

@@ -8,20 +8,21 @@ import {
   Put,
   UseInterceptors,
   UploadedFiles,
-  Request,
+  SerializeOptions,
 } from '@nestjs/common';
-import { HotelService, HotelRoomService } from 'src/base/hotel/service';
-import { ID } from 'src/common/types';
-import { CreateHotelDto } from '../../common/dto/create-hotel.dto';
-import { CreateHotelRoomDto } from '../../common/dto/create-hotel-room.dto';
 import { FilesInterceptor } from '@nestjs/platform-express/multer';
-import { HotelDocument } from 'src/base/hotel/schema/hotel.schema';
-import { UpdateHotelRoomDto } from 'src/common/dto/update-hotel-room.dto';
-import { PUBLIC_DIR } from 'src/common/constants';
-import { HotelRoomDTO } from 'src/common/dto/hotel-room.dto';
-import { USER_ROLE } from 'src/common/enums';
+
+import { PUBLIC_DIR } from '@common/constants';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
+import { HotelDTO, HotelRoomDTO } from '@common/dto';
+import { USER_ROLE } from '@common/enums';
+import { MongooseClassSerializerInterceptor } from '@common/interceptors';
+import { ID } from '@common/types';
+
+import { HotelService, HotelRoomService } from '@base/hotel/service';
 
 @Controller()
+@SerializeOptions({ strategy: 'excludeAll' })
 export class HotelApiController {
   constructor(
     private readonly hotelService: HotelService,
@@ -29,110 +30,63 @@ export class HotelApiController {
   ) {}
 
   @Get('common/hotel-rooms')
+  @UseInterceptors(MongooseClassSerializerInterceptor(HotelRoomDTO))
   async getHotelRooms(
     @Query() query: SearchRoomsParams,
-    @Request() req: ObjectWith<'user', IUser>,
-  ): Promise<HotelRoomDTO[]> {
-    const { user } = req;
+    @CurrentUser() user: IUser,
+  ) {
     let { isEnabled } = query;
 
     if (!user || user?.role == USER_ROLE.CLIENT) {
       isEnabled = true;
     }
 
-    const hotelRooms = await this.hotelRoomService.search({
+    return await this.hotelRoomService.search({
       ...query,
       isEnabled,
     });
-
-    return hotelRooms.map(({ _id, description, images, isEnabled, hotel }) => ({
-      id: _id.toString(),
-      description,
-      images,
-      isEnabled,
-      hotel: hotel
-        ? {
-            id: (hotel as HotelDocument)._id.toString(),
-            title: hotel.title,
-            description: hotel.description,
-          }
-        : null,
-    }));
   }
 
   @Get('common/hotel-rooms/:id')
+  @UseInterceptors(MongooseClassSerializerInterceptor(HotelRoomDTO))
   async getHotelRoom(@Param('id') id: ID) {
-    const hotelRoom = await this.hotelRoomService.findById(id);
-
-    return hotelRoom;
+    return await this.hotelRoomService.findById(id);
   }
 
   @Post('admin/hotels')
-  async createHotel(@Body() data: CreateHotelDto) {
-    const hotel = await this.hotelService.create(data);
-    const { _id: id, title, description } = hotel;
-
-    return { id, title, description };
+  @UseInterceptors(MongooseClassSerializerInterceptor(HotelDTO))
+  async createHotel(@Body() data: CreateHotelParams) {
+    return await this.hotelService.create(data);
   }
 
   @Get('admin/hotels')
+  @UseInterceptors(MongooseClassSerializerInterceptor(HotelDTO))
   async getHotels(@Query() query: GetHotelsQueryParams) {
-    const hotels = await this.hotelService.search(query);
-
-    return hotels.map(({ _id: id, title, description }) => ({
-      id,
-      title,
-      description,
-    }));
+    return await this.hotelService.search(query);
   }
 
   @Put('admin/hotels/:id')
+  @UseInterceptors(MongooseClassSerializerInterceptor(HotelDTO))
   async updateHotel(@Param('id') id: ID, @Body() data: UpdateHotelParams) {
-    const hotel = await this.hotelService.update(id, data);
-    const { title, description } = hotel;
-
-    return { id, title, description };
+    return await this.hotelService.update(id, data);
   }
 
   @Post('admin/hotel-rooms')
   @UseInterceptors(FilesInterceptor('images', 10))
-  async addHotelRoom(
-    @Body() data: CreateHotelRoomDto,
-    @UploadedFiles() files: Array<Express.Multer.File>,
+  @UseInterceptors(MongooseClassSerializerInterceptor(HotelRoomDTO))
+  async createHotelRoom(
+    @Body() data: CreateHotelRoomParams,
+    @UploadedFiles() images: Array<Express.Multer.File>,
   ) {
-    const hotelRoom = await this.hotelRoomService.create({
-      ...data,
-      images: files,
-    });
-
-    const hotelRoomPopulated = await hotelRoom.populate('hotel');
-    const {
-      _id: id,
-      description,
-      images,
-      isEnabled,
-      hotel: { title: hotelTitle, description: hotelDescription },
-    } = hotelRoomPopulated;
-    const hotelId = (hotelRoomPopulated.hotel as HotelDocument)._id;
-
-    return {
-      id,
-      description,
-      images,
-      isEnabled,
-      hotel: {
-        id: hotelId,
-        title: hotelTitle,
-        description: hotelDescription,
-      },
-    };
+    return await this.hotelRoomService.create({ ...data, images });
   }
 
   @Put('admin/hotel-rooms/:id')
   @UseInterceptors(FilesInterceptor('images', 10))
+  @UseInterceptors(MongooseClassSerializerInterceptor(HotelRoomDTO))
   async updateHotelRoom(
     @Param('id') roomId: ID,
-    @Body() data: UpdateHotelRoomDto,
+    @Body() data: UpdateHotelRoomParams,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
     const images = [
@@ -141,30 +95,7 @@ export class HotelApiController {
         ? files.map((image) => image.path.replace(PUBLIC_DIR, ''))
         : []),
     ];
-    const hotelRoom = await this.hotelRoomService.update(roomId, {
-      ...data,
-      images,
-    });
 
-    const hotelRoomPopulated = await hotelRoom.populate('hotel');
-
-    const { _id: id, description, isEnabled, hotel } = hotelRoomPopulated;
-    const {
-      _id: hotelId,
-      title: hotelTitle,
-      description: hotelDescription,
-    } = hotel as HotelDocument;
-
-    return {
-      id,
-      description,
-      images,
-      isEnabled,
-      hotel: {
-        id: hotelId,
-        title: hotelTitle,
-        description: hotelDescription,
-      },
-    };
+    return await this.hotelRoomService.update(roomId, { ...data, images });
   }
 }

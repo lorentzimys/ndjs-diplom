@@ -1,20 +1,21 @@
 import * as bcrypt from 'bcrypt';
+
 import {
   Body,
   Controller,
   Get,
   Post,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 
-import { UserDTO } from 'src/common/dto/user.dto';
-import { CreateUserDTO } from 'src/common/dto/create-user.dto';
-import { UserService } from 'src/base/user/user.service';
-import { LoginResponseDTO } from 'src/common/dto/login-response.dto';
-import { AuthenticatedGuard } from './guards/authenticated.guard';
+import { LoginResponseDTO, CreateUserDTO, UserDTO } from '@common/dto';
+import { USER_ROLE } from '@common/enums';
+
+import { UserService } from '@base/user/user.service';
+
 import { LoginGuard } from './guards/login.auth.guard';
-import { USER_ROLE } from 'src/common/enums';
 
 @Controller()
 export class AuthController {
@@ -23,7 +24,7 @@ export class AuthController {
   private async getUsers(
     searchParams: SearchUserParams,
   ): Promise<Omit<UserDTO, 'role'>[]> {
-    const users = await this.userService.findAll();
+    const users = await this.userService.search(searchParams);
 
     return users.map((user) => ({
       id: user._id.toString(),
@@ -69,13 +70,12 @@ export class AuthController {
     };
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Post('auth/logout')
-  async logout(@Request() req): Promise<void> {
+  async logout(@Request() req, @Res() res): Promise<void> {
     req.session.destroy();
+    res.status(204).send();
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Get('admin/users')
   async getUsersForAdmin(
     searchParams: SearchUserParams,

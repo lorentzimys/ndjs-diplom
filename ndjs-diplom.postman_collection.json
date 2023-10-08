@@ -7,81 +7,121 @@
 	},
 	"item": [
 		{
-			"name": "Hotels",
+			"name": "Auth",
 			"item": [
 				{
-					"name": "getHotelRooms",
+					"name": "login (client)",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": {
-							"raw": "http://{{HOST}}:{{PORT}}/api/common/hotel-rooms",
-							"protocol": "http",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"api",
-								"common",
-								"hotel-rooms"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getHotelRoom",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{HOST}}:{{PORT}}/api/common/hotel-rooms",
-							"protocol": "http",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"api",
-								"common",
-								"hotel-rooms"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getHotels",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotels?limit=2&offset=1",
-							"protocol": "http",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"api",
-								"admin",
-								"hotels"
-							],
-							"query": [
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
 								{
-									"key": "limit",
-									"value": "2"
+									"key": "email",
+									"value": "Celia_Frami@yahoo.com",
+									"type": "text"
 								},
 								{
-									"key": "offset",
-									"value": "1"
+									"key": "password",
+									"value": "testPass",
+									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"auth",
+								"login"
 							]
 						}
 					},
 					"response": []
 				},
+				{
+					"name": "login (admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "Briana51@yahoo.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "testPass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "Celia_Frami@yahoo.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "testPass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/auth/logout",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
 				{
 					"name": "createHotel",
 					"request": {
@@ -119,32 +159,12 @@
 					"response": []
 				},
 				{
-					"name": "addHotelRoom",
+					"name": "getHotels",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "description",
-									"value": "{{$randomLoremText}}",
-									"type": "text"
-								},
-								{
-									"key": "hotelId",
-									"value": "6517cbb3768109688acaccbf",
-									"type": "text"
-								},
-								{
-									"key": "images",
-									"type": "file",
-									"src": "/Users/lorentzimys/Downloads/2021-04-30 20-15-02.JPG"
-								}
-							]
-						},
 						"url": {
-							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotel-rooms",
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotels?limit=2&offset=1",
 							"protocol": "http",
 							"host": [
 								"{{HOST}}"
@@ -153,7 +173,17 @@
 							"path": [
 								"api",
 								"admin",
-								"hotel-rooms"
+								"hotels"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "offset",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -197,6 +227,47 @@
 									"key": "",
 									"value": null
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addHotelRoom",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "{{$randomLoremText}}",
+									"type": "text"
+								},
+								{
+									"key": "hotelId",
+									"value": "6518495e1456581581fe7e64",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/Users/lorentzimys/Downloads/2021-04-30 20-15-02.JPG"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/hotel-rooms",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"hotel-rooms"
 							]
 						}
 					},
@@ -258,11 +329,139 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "createAdminUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "testPass",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "adminUser",
+									"type": "text"
+								},
+								{
+									"key": "contactPhone",
+									"value": "{{$randomPhoneNumber}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/users",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUsers (admin)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/admin/users",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
-			"name": "Reservations",
+			"name": "Common",
+			"item": [
+				{
+					"name": "getHotelRooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/common/hotel-rooms?hotel=6518495e1456581581fe7e64",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"common",
+								"hotel-rooms"
+							],
+							"query": [
+								{
+									"key": "hotel",
+									"value": "6518495e1456581581fe7e64"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getHotelRoom",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/common/hotel-rooms/652099395b03940f6cf40d68",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"common",
+								"hotel-rooms",
+								"652099395b03940f6cf40d68"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
 			"item": [
 				{
 					"name": "createReservation",
@@ -327,34 +526,6 @@
 					"response": []
 				},
 				{
-					"name": "getManagerClientReservations",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{HOST}}:{{PORT}}/api/manager/reservations/:userId",
-							"protocol": "http",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"api",
-								"manager",
-								"reservations",
-								":userId"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": "650ebfd5e103168079a1d653"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "deleteReservation",
 					"request": {
 						"method": "DELETE",
@@ -376,6 +547,90 @@
 								{
 									"key": "id",
 									"value": "651afeb82195480758998f83"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createClientUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "testPass",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "{{$randomFileName}}",
+									"type": "text"
+								},
+								{
+									"key": "contactPhone",
+									"value": "{{$randomPhoneNumber}}",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/client/register",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"client",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Manager",
+			"item": [
+				{
+					"name": "getManagerClientReservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/manager/reservations/:userId",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"manager",
+								"reservations",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "650ebfd5e103168079a1d653"
 								}
 							]
 						}
@@ -405,6 +660,34 @@
 									"key": "userId",
 									"value": "651afeb82195480758998f83"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUsers (manager)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/manager/users",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"manager",
+								"users"
 							]
 						}
 					},

@@ -1,10 +1,11 @@
 import { Model } from 'mongoose';
 
 import { Injectable } from '@nestjs/common';
-import { Message, SupportRequest } from '../schema';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { User } from 'src/base/user/schemas/user.schema';
+import { User } from '@base/user/schemas/user.schema';
+
+import { Message, SupportRequest } from '../schema';
 import { SupportRequestDocument } from '../schema/support-request.schema';
 
 @Injectable()

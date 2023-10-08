@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Message, MessageSchema } from './schema/message.schema';
-import { SupportRequest, SupportRequestSchema } from './schema';
+import { User, UserSchema } from '@base/user/schemas/user.schema';
+import { UserModule } from '@base/user/user.module';
+import { UserService } from '@base/user/user.service';
 
+import { SupportRequest, SupportRequestSchema } from './schema';
+import { Message, MessageSchema } from './schema/message.schema';
 import {
   SupportRequestService,
   SupportRequestClientService,
   SupportRequestEmployeeService,
 } from './service';
-import { UserModule } from '../user/user.module';
-import { UserService } from '../user/user.service';
-import { User, UserSchema } from '../user/schemas/user.schema';
 
 @Module({
   imports: [

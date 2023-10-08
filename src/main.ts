@@ -1,14 +1,16 @@
 import 'dotenv/config';
 import { join } from 'path';
 
-import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-
-import { AppModule } from './app.module';
-
-import { API_PREFIX, PUBLIC_DIR } from './common/constants';
 import * as session from 'express-session';
 import * as passport from 'passport';
+
+import { NestFactory, Reflector } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+
+import { API_PREFIX, PUBLIC_DIR } from '@common/constants';
+import { RolesGuard } from '@common/guards';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -17,6 +19,7 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix(API_PREFIX);
+  app.useGlobalGuards(new RolesGuard(app.get(Reflector)));
   app.useStaticAssets(join(process.cwd(), PUBLIC_DIR));
   app.use(
     session({

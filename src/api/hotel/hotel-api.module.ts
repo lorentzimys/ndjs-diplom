@@ -1,14 +1,17 @@
 import { join } from 'path';
+
 import { diskStorage } from 'multer';
 
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express/multer';
 
-import { HotelModule } from 'src/base/hotel/hotel.module';
-import { editFileName } from 'src/utils/file';
+import { PUBLIC_DIR } from '@common/constants';
+
+import { editFileName } from '@utils/file';
+
+import { HotelModule } from '@base/hotel/hotel.module';
 
 import { HotelApiController } from './hotel-api.controller';
-import { PUBLIC_DIR } from 'src/common/constants';
 
 @Module({
   imports: [

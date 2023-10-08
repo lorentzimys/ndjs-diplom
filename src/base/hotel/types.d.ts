@@ -4,11 +4,6 @@ interface SearchHotelParams {
   title?: string;
 }
 
-interface UpdateHotelParams {
-  title: string;
-  description: string;
-}
-
 interface IHotelService {
   create(data: any): Promise<Hotel>;
   findById(id: ID): Promise<Hotel>;
