@@ -1,4 +1,4 @@
-interface ReservationDto {
+interface AddReservationParams {
   userId: ID;
   hotelId: ID;
   roomId: ID;
@@ -6,15 +6,13 @@ interface ReservationDto {
   dateEnd: Date;
 }
 
-interface ReservationSearchOptions {
+interface ReservationSearchParams {
   userId: ID;
   dateStart?: Date;
   dateEnd?: Date;
 }
 interface IReservationService {
-  addReservation(data: ReservationDto): Promise<Reservation>;
+  addReservation(data: AddReservationParams): Promise<Reservation>;
   removeReservation(id: ID): Promise<void>;
-  getReservations(
-    filter: ReservationSearchOptions,
-  ): Promise<Array<Reservation>>;
+  getReservations(filter: ReservationSearchParams): Promise<Array<Reservation>>;
 }

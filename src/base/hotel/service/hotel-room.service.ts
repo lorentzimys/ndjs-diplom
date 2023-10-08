@@ -26,9 +26,7 @@ export class HotelRoomService implements IHotelRoomService {
   }
 
   async findById(id: ID): Promise<HotelRoomDocument> {
-    const hotelRoom = await this.model.findById(id).populate('hotel');
-
-    return hotelRoom;
+    return await this.model.findById(id).populate('hotel');
   }
 
   async search({

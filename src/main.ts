@@ -8,6 +8,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { API_PREFIX, PUBLIC_DIR } from '@common/constants';
+import { MongoExceptionFilter } from '@common/filters';
 import { RolesGuard } from '@common/guards';
 
 import { AppModule } from './app.module';
@@ -20,6 +21,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix(API_PREFIX);
   app.useGlobalGuards(new RolesGuard(app.get(Reflector)));
+  app.useGlobalFilters(new MongoExceptionFilter());
   app.useStaticAssets(join(process.cwd(), PUBLIC_DIR));
   app.use(
     session({

@@ -1,16 +1,10 @@
 import { Expose, Type } from 'class-transformer';
 
-import { HotelNestedDTO } from './hotel-nested.dto';
-import { BaseDTO } from '../base.dto';
+import { BaseHotelRoomDTO } from './base-hotel-room.dto';
+import { HotelDTO } from '../hotel/hotel.dto';
 
-export class HotelRoomDTO extends BaseDTO {
+export class HotelRoomDTO extends BaseHotelRoomDTO {
   @Expose()
-  description: string;
-
-  @Expose()
-  images: string[];
-
-  @Expose()
-  @Type(() => HotelNestedDTO)
-  hotel?: HotelNestedDTO;
+  @Type(() => HotelDTO)
+  hotel?: HotelDTO;
 }

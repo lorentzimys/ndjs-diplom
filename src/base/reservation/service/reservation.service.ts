@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Reservation } from '../schema';
@@ -13,11 +13,17 @@ export class ReservationService implements IReservationService {
     private reservationModel: Model<ReservationDocument>,
   ) {}
 
-  async addReservation(data: ReservationDto): Promise<ReservationDocument> {
-    const { userId, hotelId, roomId, dateStart, dateEnd } = data;
+  async addReservation(
+    data: AddReservationParams,
+  ): Promise<ReservationDocument> {
+    const { hotelId, roomId, dateStart, dateEnd } = data;
+    const room = await this.reservationModel.find({ roomId });
+
+    if (!room) {
+      throw new BadRequestException('Room with given ID does not exist');
+    }
 
     const countDocuments = await this.reservationModel.countDocuments({
-      userId,
       roomId,
       hotelId,
       dateStart: { $lte: new Date(dateEnd).toISOString() },
@@ -27,12 +33,12 @@ export class ReservationService implements IReservationService {
     const roomAvailable = countDocuments === 0;
 
     if (!roomAvailable) {
-      throw new Error('Room is not available');
+      throw new BadRequestException('Room is not available');
     }
 
     const reservation = new this.reservationModel(data);
 
-    return await reservation.save();
+    return await (await reservation.save()).populate(['hotelId', 'roomId']);
   }
 
   async removeReservation(id: string): Promise<void> {
@@ -40,15 +46,10 @@ export class ReservationService implements IReservationService {
   }
 
   async getReservations(
-    filter: ReservationSearchOptions,
-    expand?: string[],
+    filter: ReservationSearchParams,
   ): Promise<ReservationDocument[]> {
     const query = this.reservationModel.find(filter);
 
-    if (expand) {
-      query.populate(expand);
-    }
-
-    return await query.exec();
+    return await query.populate(['hotelId', 'roomId']).exec();
   }
 }

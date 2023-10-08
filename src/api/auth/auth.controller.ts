@@ -8,66 +8,43 @@ import {
   Request,
   Res,
   UseGuards,
+  UseInterceptors,
+  Query,
+  SerializeOptions,
 } from '@nestjs/common';
 
-import { LoginResponseDTO, CreateUserDTO, UserDTO } from '@common/dto';
+import { Public } from '@common/decorators';
+import { UserDTO, BaseUserDTO } from '@common/dto';
 import { USER_ROLE } from '@common/enums';
+import { MongooseClassSerializerInterceptor } from '@common/interceptors';
 
 import { UserService } from '@base/user/user.service';
 
 import { LoginGuard } from './guards/login.auth.guard';
 
 @Controller()
+@SerializeOptions({ strategy: 'excludeAll' })
 export class AuthController {
   constructor(private readonly userService: UserService) {}
 
-  private async getUsers(
-    searchParams: SearchUserParams,
-  ): Promise<Omit<UserDTO, 'role'>[]> {
-    const users = await this.userService.search(searchParams);
-
-    return users.map((user) => ({
-      id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-      contactPhone: user.contactPhone,
-    }));
-  }
-
-  private async createUser(
-    body: CreateUserDTO,
-    role: UserRole,
-  ): Promise<UserDTO> {
+  private async _createUser(body: CreateUserParams, role: UserRole) {
     const saltOrRounds = 10;
     const passwordHash = await bcrypt.hash(body.password, saltOrRounds);
 
-    const user = await this.userService.create({
+    return await this.userService.create({
       email: body.email,
       name: body.name,
       passwordHash,
       role,
       contactPhone: body.contactPhone,
     });
-
-    return {
-      id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      contactPhone: user.contactPhone,
-    };
   }
 
-  @UseGuards(LoginGuard)
   @Post('auth/login')
-  async login(@Request() req): Promise<LoginResponseDTO> {
-    const { user } = req;
-
-    return {
-      email: user.email,
-      name: user.name,
-      contactPhone: user.contactPhone,
-    };
+  @UseGuards(LoginGuard)
+  @UseInterceptors(MongooseClassSerializerInterceptor(BaseUserDTO))
+  async login(@Request() req) {
+    return req.user;
   }
 
   @Post('auth/logout')
@@ -76,31 +53,22 @@ export class AuthController {
     res.status(204).send();
   }
 
-  @Get('admin/users')
-  async getUsersForAdmin(
-    searchParams: SearchUserParams,
-  ): Promise<Omit<UserDTO, 'role'>[]> {
-    return this.getUsers(searchParams);
-  }
-
-  @Get('manager/users')
-  async getUsersForManager(
-    searchParams: SearchUserParams,
-  ): Promise<Omit<UserDTO, 'role'>[]> {
-    return this.getUsers(searchParams);
+  @Get(['admin/users', 'manager/users'])
+  @UseInterceptors(MongooseClassSerializerInterceptor(BaseUserDTO))
+  async getUsersForAdmin(@Query() searchParams: SearchUserParams) {
+    return await this.userService.search(searchParams);
   }
 
   @Post('admin/users')
-  async createAdminUser(@Body() body: CreateUserDTO): Promise<UserDTO> {
-    const createdUser = await this.createUser(body, USER_ROLE.ADMIN);
-
-    return createdUser;
+  @UseInterceptors(MongooseClassSerializerInterceptor(UserDTO))
+  async createUser(@Body() { role, ...data }: AdminCreateUserParams) {
+    return await this._createUser(data, role);
   }
 
+  @Public()
   @Post('client/register')
-  async createClientUser(@Body() body: CreateUserDTO): Promise<UserDTO> {
-    const createdUser = await this.createUser(body, USER_ROLE.CLIENT);
-
-    return createdUser;
+  @UseInterceptors(MongooseClassSerializerInterceptor(BaseUserDTO))
+  async createClientUser(@Body() body: CreateUserParams) {
+    return await this._createUser(body, USER_ROLE.CLIENT);
   }
 }

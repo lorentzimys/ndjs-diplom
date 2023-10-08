@@ -1,7 +1,8 @@
-export class UserDTO implements Omit<IUser, 'passwordHash'> {
-  id: string;
-  name: string;
-  email: string;
-  contactPhone: string;
+import { Expose } from 'class-transformer';
+
+import { BaseUserDTO } from './base-user.dto';
+
+export class UserDTO extends BaseUserDTO {
+  @Expose()
   role: UserRole;
 }

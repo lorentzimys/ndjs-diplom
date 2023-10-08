@@ -36,12 +36,28 @@ export class UserService implements IUserService {
   }
 
   async search(params: SearchUserParams): Promise<UserDocument[]> {
-    const users = await this.model.find({
-      email: { $regex: params.email, $options: 'i' },
-      name: { $regex: params.name, $options: 'i' },
-      contactPhone: { $regex: params.contactPhone, $options: 'i' },
-    });
+    const query: { [key: string]: any } = {};
 
-    return users;
+    if (params.contactPhone) {
+      query.contactPhone = { $regex: params.contactPhone, $options: 'i' };
+    }
+
+    if (params.name) {
+      query.name = { $regex: params.name, $options: 'i' };
+    }
+
+    if (params.email) {
+      query.email = { $regex: params.email, $options: 'i' };
+    }
+
+    if (params.offset) {
+      query.skip(params.offset);
+    }
+
+    if (params.limit) {
+      query.limit(params.limit);
+    }
+
+    return await this.model.find(query);
   }
 }

@@ -2,10 +2,10 @@ import { Expose } from 'class-transformer';
 
 import { BaseDTO } from '../base.dto';
 
-export class HotelNestedDTO extends BaseDTO {
-  @Expose()
-  title: string;
-
+export class BaseHotelRoomDTO extends BaseDTO {
   @Expose()
   description: string;
+
+  @Expose()
+  images: string[];
 }
