@@ -6,7 +6,11 @@ import { User } from '@base/user/schemas/user.schema';
 
 @Schema()
 export class Message {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, required: true })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: User.name,
+    required: true,
+  })
   author: User;
 
   @Prop({ required: true })
@@ -15,7 +19,7 @@ export class Message {
   @Prop({ required: true })
   text: string;
 
-  @Prop()
+  @Prop({ required: false })
   readAt: Date;
 }
 

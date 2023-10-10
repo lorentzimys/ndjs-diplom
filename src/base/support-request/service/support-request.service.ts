@@ -18,14 +18,27 @@ export class SupportRequestService {
   async findSupportRequests(
     params: GetChatListParams,
   ): Promise<SupportRequest[]> {
-    const { user, isActive } = params;
+    const searchParams = {};
 
-    const supportRequests = await this.supportRequestModel.find({
-      user,
-      isActive,
-    });
+    if (params.user) {
+      searchParams['user'] = params.user;
+    }
 
-    return supportRequests;
+    if (params.isActive) {
+      searchParams['isActive'] = params.isActive;
+    }
+
+    const query = this.supportRequestModel.find(searchParams);
+
+    if (params.offset) {
+      query.skip(params.offset);
+    }
+
+    if (params.limit) {
+      query.limit(params.limit);
+    }
+
+    return await query.populate('user').exec();
   }
 
   async sendMessage(data: SendMessageDto): Promise<MessageDocument> {

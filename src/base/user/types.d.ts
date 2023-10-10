@@ -1,6 +1,4 @@
-interface SearchUserParams {
-  limit?: number;
-  offset?: number;
+interface SearchUserParams extends Paginated {
   email?: string;
   name?: string;
   contactPhone?: string;

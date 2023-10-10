@@ -15,9 +15,9 @@ interface MarkMessagesAsReadDto {
   createdBefore: Date;
 }
 
-interface GetChatListParams {
-  user: ID | null;
-  isActive: bool;
+interface GetChatListParams extends Paginated {
+  user?: ID | null;
+  isActive?: bool;
 }
 
 interface ISupportRequestService {

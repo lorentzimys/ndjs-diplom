@@ -8,7 +8,11 @@ import { Message } from './message.schema';
 
 @Schema()
 export class SupportRequest {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, required: true })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: User.name,
+    required: true,
+  })
   user: User;
 
   @Prop({ required: true })
@@ -17,11 +21,11 @@ export class SupportRequest {
   @Prop({
     type: MongooseSchema.Types.Array,
     ref: Message.name,
-    required: true,
+    required: false,
   })
   messages: Message[];
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   isActive: boolean;
 }
 

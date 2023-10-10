@@ -11,4 +11,8 @@ export class BaseUserDTO extends BaseDTO {
 
   @Expose()
   contactPhone: string;
+
+  constructor(partial: Partial<BaseUserDTO>) {
+    super(partial);
+  }
 }

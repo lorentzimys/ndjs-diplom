@@ -1,7 +1,4 @@
-interface GetHotelsQueryParams {
-  limit: number;
-  offset: number;
-}
+interface GetHotelsQueryParams extends Paginated {}
 
 interface CreateHotelParams {
   title: string;

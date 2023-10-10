@@ -13,6 +13,7 @@ import { UserModule } from '@base/user/user.module';
 import { AuthModule } from '@api/auth/auth.module';
 import { HotelApiModule } from '@api/hotel/hotel-api.module';
 import { ReservationApiModule } from '@api/reservation/reservation.module';
+import { SupportRequestApiModule } from '@api/support-request/support-request.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ReservationApiModule } from '@api/reservation/reservation.module';
     HotelApiModule,
     ReservationApiModule,
     AuthModule,
+    SupportRequestApiModule,
   ],
   controllers: [],
   providers: [

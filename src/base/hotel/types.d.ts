@@ -1,6 +1,4 @@
-interface SearchHotelParams {
-  limit: number;
-  offset: number;
+interface SearchHotelParams extends Paginated {
   title?: string;
 }
 
@@ -11,11 +9,9 @@ interface IHotelService {
   update(id: ID, data: UpdateHotelParams): Promise<Hotel>;
 }
 
-interface SearchRoomsParams {
+interface SearchRoomsParams extends Paginated {
   hotel: ID;
   isEnabled: boolean;
-  limit?: number;
-  offset?: number;
 }
 
 interface IHotelRoomService {

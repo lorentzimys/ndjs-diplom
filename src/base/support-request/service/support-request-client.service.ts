@@ -3,6 +3,8 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
+import { ID } from '@common/types';
+
 import { User } from '@base/user/schemas/user.schema';
 
 import { Message, SupportRequest } from '../schema';
@@ -20,10 +22,25 @@ export class SupportRequestClientService
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  createSupportRequest(
-    data: CreateSupportRequestDto,
+  async createSupportRequest(
+    data: CreateSupportRequestParams & { user: ID },
   ): Promise<SupportRequestDocument> {
-    throw new Error('Method not implemented.');
+    const newMessage = await this.messageModel.create({
+      author: data.user,
+      sentAt: new Date(),
+      text: data.text,
+      readAt: null,
+    });
+
+    const request = await this.supportRequestModel.create({
+      user: data.user,
+      isActive: true,
+      hasNewMessages: true,
+      messages: [newMessage],
+      createdAt: new Date(),
+    });
+
+    return await request.save();
   }
 
   markMessagesAsRead(params: MarkMessagesAsReadDto) {

@@ -3,3 +3,8 @@ type ObjectWith<PropKey extends string, T> = {
 } & {
   [K in PropKey]?: T;
 };
+
+type Paginated = {
+  offset?: number;
+  limit?: number;
+};
