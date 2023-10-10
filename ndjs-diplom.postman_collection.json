@@ -46,6 +46,42 @@
 					"response": []
 				},
 				{
+					"name": "login (manager)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "manager@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "testPass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "login (admin)",
 					"request": {
 						"method": "POST",
@@ -331,7 +367,7 @@
 					"response": []
 				},
 				{
-					"name": "createAdminUser",
+					"name": "createUser",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -340,22 +376,27 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "admin@email.com",
+									"value": "{{$randomEmail}}",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "testPass",
+									"value": "{{$randomPassword}}",
 									"type": "text"
 								},
 								{
 									"key": "name",
-									"value": "adminUser",
+									"value": "{{$randomFirstName}}",
 									"type": "text"
 								},
 								{
 									"key": "contactPhone",
 									"value": "{{$randomPhoneNumber}}",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "manager",
 									"type": "text"
 								}
 							]
@@ -478,12 +519,12 @@
 								},
 								{
 									"key": "startDate",
-									"value": "2022-01-01",
+									"value": "2025-03-02",
 									"type": "text"
 								},
 								{
 									"key": "endDate",
-									"value": "2022-01-28",
+									"value": "2025-03-03",
 									"type": "text"
 								}
 							]
@@ -563,7 +604,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "{{$randomEmail}}",
+									"value": "client@email.com",
 									"type": "text"
 								},
 								{
@@ -580,11 +621,6 @@
 									"key": "contactPhone",
 									"value": "{{$randomPhoneNumber}}",
 									"type": "text"
-								},
-								{
-									"key": "role",
-									"value": "admin",
-									"type": "text"
 								}
 							]
 						},
@@ -599,6 +635,85 @@
 								"api",
 								"client",
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createSupportRequest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "text",
+									"value": "Help me",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/client/support-requests",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"client",
+								"support-requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSupportRequests",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "text",
+									"value": "Help me",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/client/support-requests?isActive=true&limit=1&offset=1",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"client",
+								"support-requests"
+							],
+							"query": [
+								{
+									"key": "isActive",
+									"value": "true"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -688,6 +803,54 @@
 								"api",
 								"manager",
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSupportRequests",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "text",
+									"value": "Help me",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/manager/support-requests?isActive=true&limit=1&offset=1",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"manager",
+								"support-requests"
+							],
+							"query": [
+								{
+									"key": "isActive",
+									"value": "true"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "1"
+								}
 							]
 						}
 					},
