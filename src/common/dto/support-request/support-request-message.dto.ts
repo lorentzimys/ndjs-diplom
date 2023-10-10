@@ -1,16 +1,17 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 
 import { BaseDTO } from '../base.dto';
 import { UserSmallDTO } from '../user';
 
 export class SupportRequestMessageDTO extends BaseDTO {
-  @Expose()
-  createdAt: Date;
+  @Expose({ name: 'createdAt' })
+  sentAt: Date;
 
   @Expose()
   text: string;
 
   @Expose()
+  @Transform(({ value }) => value ?? null)
   readAt: Date;
 
   @Expose()

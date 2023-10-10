@@ -73,4 +73,34 @@ export class SupportRequestApiController {
   async getSupportRequestsMessages(@Param('id') id: string) {
     return await this.supportRequestService.getMessages(id);
   }
+
+  @Post('common/support-requests/:id/messages')
+  @UserRoles([USER_ROLE.CLIENT, USER_ROLE.MANAGER])
+  @UseInterceptors(MongooseClassSerializerInterceptor(SupportRequestMessageDTO))
+  async sendMessage(
+    @Param('id') id: string,
+    @CurrentUser() user,
+    @Body() body: CreateSupportRequestMessageParams,
+  ) {
+    return await this.supportRequestService.sendMessage({
+      supportRequest: id,
+      ...body,
+      author: user._id,
+    });
+  }
+
+  @Post('common/support-requests/:id/messages/read')
+  @UserRoles([USER_ROLE.CLIENT, USER_ROLE.MANAGER])
+  @UseInterceptors(MongooseClassSerializerInterceptor(SupportRequestMessageDTO))
+  async markRead(
+    @Param('id') supportRequestId: string,
+    @CurrentUser() user,
+    @Body() body: MarkAsReadParams,
+  ) {
+    return await this.supportRequestEmployeeService.markMessagesAsRead({
+      user: user._id,
+      supportRequest: supportRequestId,
+      createdBefore: new Date(body.createdBefore),
+    });
+  }
 }

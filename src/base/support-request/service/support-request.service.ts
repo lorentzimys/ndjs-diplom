@@ -42,9 +42,14 @@ export class SupportRequestService {
   }
 
   async sendMessage(data: SendMessageDto): Promise<MessageDocument> {
-    const message = new this.messageModel(data);
+    const message = new this.messageModel({
+      ...data,
+      sentAt: new Date(),
+    });
 
-    return await message.save();
+    const savedMessage = await message.save();
+
+    return await savedMessage.populate('author');
   }
 
   async getMessages(supportRequest: string): Promise<MessageDocument[]> {

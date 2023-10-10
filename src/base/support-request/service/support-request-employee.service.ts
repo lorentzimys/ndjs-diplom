@@ -32,7 +32,7 @@ export class SupportRequestEmployeeService
           sentAt: { $lte: params.createdBefore },
         },
         {
-          isRead: true,
+          readAt: new Date(),
         },
       )
       .exec();

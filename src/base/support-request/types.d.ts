@@ -4,14 +4,14 @@ interface CreateSupportRequestDto {
 }
 
 interface SendMessageDto {
-  author: ID;
-  supportRequest: ID;
+  author: string;
+  supportRequest: string;
   text: string;
 }
 
 interface MarkMessagesAsReadDto {
-  user: ID;
-  supportRequest: ID;
+  user: string;
+  supportRequest: string;
   createdBefore: Date;
 }
 
