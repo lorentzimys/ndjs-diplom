@@ -27,11 +27,31 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
+    const userRoles = this.reflector.get<UserRole[]>(
+      'userRoles',
+      context.getHandler(),
+    );
+
     const httpContext = context.switchToHttp();
     const req = httpContext.getRequest();
     const route = req.originalUrl.split('/');
     const isApiRoute = route[1] === 'api';
     const isRoleBasedRoute = Object.values(USER_ROLE).includes(route[2]);
+
+    if (userRoles && userRoles.length) {
+      if (!req.isAuthenticated()) {
+        throw new UnauthorizedException();
+      }
+
+      const user = req.user;
+      const routeAllowed = user && userRoles.includes(user?.role);
+
+      if (!routeAllowed) {
+        throw new ForbiddenException(
+          'You do not have permission to access this resource.',
+        );
+      }
+    }
 
     if (isApiRoute && isRoleBasedRoute) {
       if (!req.isAuthenticated()) {

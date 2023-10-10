@@ -36,7 +36,7 @@ export class SupportRequestClientService
       user: data.user,
       isActive: true,
       hasNewMessages: true,
-      messages: [newMessage],
+      messages: [newMessage._id],
       createdAt: new Date(),
     });
 

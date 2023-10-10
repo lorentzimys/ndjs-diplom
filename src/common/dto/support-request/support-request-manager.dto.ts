@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 
-import { SupportRequestDTO } from '.';
+import { SupportRequestDTO } from './support-request.dto';
 import { BaseUserDTO } from '../user';
 
 export class SupportRequestManagerDTO extends SupportRequestDTO {

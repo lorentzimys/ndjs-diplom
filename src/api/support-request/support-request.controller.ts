@@ -2,14 +2,20 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Query,
   SerializeOptions,
   UseInterceptors,
 } from '@nestjs/common';
 
-import { CurrentUser } from '@common/decorators';
-import { SupportRequestDTO, SupportRequestManagerDTO } from '@common/dto';
+import { CurrentUser, UserRoles } from '@common/decorators';
+import {
+  SupportRequestDTO,
+  SupportRequestManagerDTO,
+  SupportRequestMessageDTO,
+} from '@common/dto';
+import { USER_ROLE } from '@common/enums';
 import { MongooseClassSerializerInterceptor } from '@common/interceptors';
 
 import {
@@ -59,5 +65,12 @@ export class SupportRequestApiController {
     return await this.supportRequestService.findSupportRequests({
       ...params,
     });
+  }
+
+  @Get('common/support-requests/:id/messages')
+  @UserRoles([USER_ROLE.CLIENT, USER_ROLE.MANAGER])
+  @UseInterceptors(MongooseClassSerializerInterceptor(SupportRequestMessageDTO))
+  async getSupportRequestsMessages(@Param('id') id: string) {
+    return await this.supportRequestService.getMessages(id);
   }
 }

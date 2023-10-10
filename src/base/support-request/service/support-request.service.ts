@@ -48,9 +48,16 @@ export class SupportRequestService {
   }
 
   async getMessages(supportRequest: string): Promise<MessageDocument[]> {
-    const messages = await this.messageModel.find({ supportRequest });
+    const request = await this.supportRequestModel
+      .findById(supportRequest)
+      .populate({
+        path: 'messages',
+        populate: {
+          path: 'author',
+        },
+      });
 
-    return messages;
+    return request.get('messages') as MessageDocument[];
   }
 
   subscribe(

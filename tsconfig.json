@@ -21,7 +21,7 @@
       "@api/*": ["./src/api/*"],
       "@base/*": ["./src/base/*"],
       "@common/*": ["./src/common/*",],
-      "@utils/*": ["./src/utils/*",],
+      "@utils/*": ["src/common/utils/*",],
     }
   }
 }

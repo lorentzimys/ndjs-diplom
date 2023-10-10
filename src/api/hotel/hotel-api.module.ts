@@ -6,8 +6,7 @@ import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express/multer';
 
 import { PUBLIC_DIR } from '@common/constants';
-
-import { editFileName } from '@utils/file';
+import { editFileName } from '@common/utils/file';
 
 import { HotelModule } from '@base/hotel/hotel.module';
 
