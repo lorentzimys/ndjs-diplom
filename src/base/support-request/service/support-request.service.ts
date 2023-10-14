@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Message, SupportRequest } from '../schema';
 import { MessageDocument } from '../schema/message.schema';
+import { SupportRequestDocument } from '../schema/support-request.schema';
 
 @Injectable()
 export class SupportRequestService {
@@ -14,6 +15,10 @@ export class SupportRequestService {
     @InjectModel(Message.name)
     private messageModel: Model<Message>,
   ) {}
+
+  async findSupportRequestById(id: string): Promise<SupportRequestDocument> {
+    return await this.supportRequestModel.findById(id);
+  }
 
   async findSupportRequests(
     params: GetChatListParams,
@@ -41,13 +46,16 @@ export class SupportRequestService {
     return await query.populate('user').exec();
   }
 
-  async sendMessage(data: SendMessageDto): Promise<MessageDocument> {
+  async sendMessage(data: SendMessageParams): Promise<MessageDocument> {
     const message = new this.messageModel({
       ...data,
       sentAt: new Date(),
     });
-
     const savedMessage = await message.save();
+
+    await this.supportRequestModel.findByIdAndUpdate(data.supportRequest, {
+      $push: { messages: message._id },
+    });
 
     return await savedMessage.populate('author');
   }

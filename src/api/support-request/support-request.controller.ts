@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -93,14 +94,33 @@ export class SupportRequestApiController {
   @UserRoles([USER_ROLE.CLIENT, USER_ROLE.MANAGER])
   @UseInterceptors(MongooseClassSerializerInterceptor(SupportRequestMessageDTO))
   async markRead(
-    @Param('id') supportRequestId: string,
+    @Param('id') supportRequest: string,
     @CurrentUser() user,
     @Body() body: MarkAsReadParams,
   ) {
-    return await this.supportRequestEmployeeService.markMessagesAsRead({
-      user: user._id,
-      supportRequest: supportRequestId,
+    const params = {
+      supportRequest,
       createdBefore: new Date(body.createdBefore),
-    });
+    };
+
+    if (user.role == USER_ROLE.MANAGER) {
+      return await this.supportRequestEmployeeService.markMessagesAsRead(
+        params,
+      );
+    } else if (user.role == USER_ROLE.CLIENT) {
+      const supportRequestDocument =
+        await this.supportRequestService.findSupportRequestById(supportRequest);
+      const userMatch =
+        supportRequestDocument.get('user').toString() != user._id.toString();
+
+      if (userMatch) {
+        throw new ForbiddenException('You are not allowed to do this action');
+      }
+
+      return await this.supportRequestClientService.markMessagesAsRead({
+        ...params,
+        user: user._id,
+      });
+    }
   }
 }

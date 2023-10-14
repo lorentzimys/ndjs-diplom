@@ -43,19 +43,26 @@ export class SupportRequestClientService
     return await request.save();
   }
 
-  markMessagesAsRead(params: MarkMessagesAsReadDto) {
-    const users = this.userModel.find({ _id: { $not: params.user } });
-    this.messageModel
-      .updateMany(
-        {
-          user: { $in: [users] },
-          supportRequest: params.supportRequest,
-          sentAt: { $lte: params.createdBefore },
-        },
-        { isRead: true },
-      )
-      .exec();
-    throw new Error('Method not implemented.');
+  // Предполагается, что прочитанными помечаются только сообщения не от клиента.
+  // Предполагается, что на запрос может отвечать не один менедежер, а несколько.
+  // Поэтому фильтруем сообщения НЕ от клиента - помечаем прочитанными только сообщения от отстальных пользователей, т.е. от менеджеров
+  async markMessagesAsRead({
+    user,
+    supportRequest,
+    createdBefore,
+  }: MarkMessagesAsReadParams) {
+    const supportRequestDocument =
+      await this.supportRequestModel.findById(supportRequest);
+    const messageIds = supportRequestDocument.get('messages');
+
+    return await this.messageModel.updateMany(
+      {
+        _id: { $in: messageIds },
+        author: { $ne: user },
+        sentAt: { $lte: createdBefore },
+      },
+      { $set: { readAt: new Date() } },
+    );
   }
 
   async getUnreadCount(supportRequest: string): Promise<number> {

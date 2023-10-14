@@ -3,14 +3,14 @@ interface CreateSupportRequestDto {
   text: string;
 }
 
-interface SendMessageDto {
+interface SendMessageParams {
   author: string;
   supportRequest: string;
   text: string;
 }
 
-interface MarkMessagesAsReadDto {
-  user: string;
+interface MarkMessagesAsReadParams {
+  user?: string;
   supportRequest: string;
   createdBefore: Date;
 }
@@ -22,7 +22,7 @@ interface GetChatListParams extends Paginated {
 
 interface ISupportRequestService {
   findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]>;
-  sendMessage(data: SendMessageDto): Promise<Message>;
+  sendMessage(data: SendMessageParams): Promise<Message>;
   getMessages(supportRequest: ID): Promise<Message[]>;
   subscribe(
     handler: (supportRequest: SupportRequest, message: Message) => void,
@@ -31,12 +31,12 @@ interface ISupportRequestService {
 
 interface ISupportRequestClientService {
   createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest>;
-  markMessagesAsRead(params: MarkMessagesAsReadDto);
+  markMessagesAsRead(params: MarkMessagesAsReadParams);
   getUnreadCount(supportRequest: ID): Promise<number>;
 }
 
 interface ISupportRequestEmployeeService {
-  markMessagesAsRead(params: MarkMessagesAsReadDto);
+  markMessagesAsRead(params: MarkMessagesAsReadParams);
   getUnreadCount(supportRequest: ID): Promise<number>;
   closeRequest(supportRequest: ID): Promise<void>;
 }

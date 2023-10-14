@@ -3,6 +3,8 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
+import { USER_ROLE } from '@common/enums';
+
 import { User } from '@base/user/schemas/user.schema';
 
 import { Message, SupportRequest } from '../schema';
@@ -19,21 +21,28 @@ export class SupportRequestEmployeeService
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  async markMessagesAsRead(params: MarkMessagesAsReadDto) {
-    const user = await this.supportRequestModel
-      .findById(params.supportRequest)
-      .get('user');
+  // Предполагается что прочитанными помечаются только сообщения от клиента, но прямого доступа к его ID у нас нет
+  // Поэтому фильтруем сообщения по роли автора - помечаем прочитанными только сообщения НЕ ОТ менеджеров
+  async markMessagesAsRead({
+    supportRequest,
+    createdBefore,
+  }: MarkMessagesAsReadParams) {
+    const supportRequestDocument =
+      await this.supportRequestModel.findById(supportRequest);
+    const messageIds = supportRequestDocument.get('messages');
 
-    await this.messageModel
+    const managerUsers = await this.userModel
+      .find({ role: USER_ROLE.MANAGER })
+      .select('_id');
+
+    return await this.messageModel
       .updateMany(
         {
-          user,
-          supportRequest: params.supportRequest,
-          sentAt: { $lte: params.createdBefore },
+          _id: { $in: messageIds },
+          author: { $nin: managerUsers },
+          sentAt: { $lte: createdBefore },
         },
-        {
-          readAt: new Date(),
-        },
+        { $set: { readAt: new Date() } },
       )
       .exec();
   }
