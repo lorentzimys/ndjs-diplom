@@ -9,9 +9,8 @@
 /mongo
 
 # ENV
-.*.env
-./env
-!./env/.example.env
+/env/*
+!/env/.example.env
 
 # Logs
 logs
