@@ -28,20 +28,21 @@ export class HotelService implements IHotelService {
   }
 
   async search(params: SearchHotelParams): Promise<HotelDocument[]> {
-    const { limit, offset, title } = params;
-    const query = {};
+    const query = this.model.find();
 
-    if (title) {
-      query['title'] = title;
+    if (!params.title) {
+      query.where({ title: { $regex: params.title, $options: 'i' } });
     }
 
-    const hotels = await this.model
-      .find(query)
-      .skip(offset)
-      .limit(limit)
-      .exec();
+    if (params.offset) {
+      query.skip(params.offset);
+    }
 
-    return hotels;
+    if (params.limit) {
+      query.limit(params.limit);
+    }
+
+    return await query.exec();
   }
 
   async update(id: ID, data: UpdateHotelParams): Promise<HotelDocument> {

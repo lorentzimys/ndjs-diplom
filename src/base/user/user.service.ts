@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { User, UserDocument } from './schemas/user.schema';
@@ -10,9 +10,17 @@ export class UserService implements IUserService {
   constructor(@InjectModel(User.name) private model: Model<User>) {}
 
   async create(data: Partial<User>): Promise<UserDocument> {
-    const user = new this.model(data);
+    try {
+      const user = new this.model(data);
 
-    return await user.save();
+      return await user.save();
+    } catch (e) {
+      if (e.code === 11000 && e.keyValue.email) {
+        throw new ConflictException(
+          `User with email ${e.keyValue.email} already exists`,
+        );
+      }
+    }
   }
 
   async findById(id: string): Promise<UserDocument> {
