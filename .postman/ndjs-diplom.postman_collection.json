@@ -19,7 +19,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "Celia_Frami@yahoo.com",
+									"value": "client@email.com",
 									"type": "text"
 								},
 								{
@@ -498,6 +498,121 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "getSupportRequestMessages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/common/support-requests/:id/messages",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"common",
+								"support-requests",
+								":id",
+								"messages"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6529864adc1235a907622ff4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createSupportRequestMessage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "text",
+									"value": "{{$randomLoremText}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/common/support-requests/:id/messages",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"common",
+								"support-requests",
+								":id",
+								"messages"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6529864adc1235a907622ff4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "markRead",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "createdBefore",
+									"value": "2025-10-13",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/api/common/support-requests/:id/messages/read",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"api",
+								"common",
+								"support-requests",
+								":id",
+								"messages",
+								"read"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6529864adc1235a907622ff4"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -650,7 +765,7 @@
 							"urlencoded": [
 								{
 									"key": "text",
-									"value": "Help me",
+									"value": "Help me 222",
 									"type": "text"
 								}
 							]

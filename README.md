@@ -1,73 +1,56 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Nest.js Дипломная Работа
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Дипломная работа по курсу "Backend-разработчик на Node.JS" на основе Nest.js, MongoDB, и Socket.io.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Стек технологий
 
-## Description
+- [Node.js](https://https://nodejs.org/)
+- [Nest.js](https://nestjs.com/)
+- [MongoDB](https://www.mongodb.com/)
+- [Socket.io](https://socket.io/)
+- [Passport.js](http://www.passportjs.org/)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Цели проекта
+Разработка серверной части приложения для бронирования гостиниц.
 
-## Installation
+- Разработка публичного API.
+- Разработка API пользователя.
+- Разработка API администратора.
+- Разработка чата консультанта.
 
-```bash
-$ npm install
-```
 
-## Running the app
+## Результат работы
 
-```bash
-# development
-$ npm run start
+В процессе выполенния работы было разработано полноценное серверное приложение, реализованное на платформе Nodejs с помощью фреймворка nestjs и связанных технологий. В приложении реализовано:
 
-# watch mode
-$ npm run start:dev
+- Публичный API.
+- Защищенный API для авторизованных пользователей с учетом их ролей.
+- Загрузка файлов с помощью multer
+- Cookie-based аутентификация/авторизация пользователей с использованием Passport.js.
+- Чат техподдерхки,в том числе с использованием технологии Websocket
+- Сериализация mongodb документов в DTO-классы с помощью библиотек class-transformer/class-validator.
+- Контейнеризация приложения с помощью Docker-контейнера и запуск приложения с помощью docker-compose с подключенной MongoDB базой.
+- Настройка окружения через переменные окружения и библиотеку dotenv и модуль конфигурации (`ConfigModule`).
 
-# production mode
-$ npm run start:prod
-```
+## Запуск приложения через npm-скрипты
 
-## Test
+Для запуска приложения локально, вы можете использовать следующие команды:
 
-```bash
-# unit tests
-$ npm run test
+- `npm run start:dev` - запускает приложение в режиме разработки с возможностью отслеживания изменений в коде.
+- `npm run build` - генерирует production сборку приложения.
+- `npm run dev:prod` - запускает production сборку приложения.
 
-# e2e tests
-$ npm run test:e2e
+## Запуск приложения в контейнере Docker
 
-# test coverage
-$ npm run test:cov
-```
+Приложение можно также запустить в контейнере Docker. Для этого выполните следующие шаги:
 
-## Support
+1. Сначала соберите контейнер:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+   ```bash
+   docker-compose --env-file ./env/.development.env build
+2. Затем запустите контейеры:
+    ```bash
+    docker-compose --env-file ./env/.development.env up
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+### Важно
+Предоставленный docker-compose.yml файл предполагает, что у вас есть .development.env файл в директории ./env/, который содержит необходимые переменные окружения для вашего приложения. Убедитесь, что ваши переменные окружения настроены правильно перед запуском контейнера.
