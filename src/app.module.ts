@@ -1,7 +1,7 @@
-import { AuthMechanism, ServerApiVersion } from 'mongodb';
+import { AuthMechanism } from 'mongodb';
 
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -15,23 +15,23 @@ import { HotelApiModule } from '@api/hotel/hotel-api.module';
 import { ReservationApiModule } from '@api/reservation/reservation.module';
 import { SupportRequestApiModule } from '@api/support-request/support-request.module';
 
+import { ENV_FILE_PATH } from './main';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.development.env',
+      isGlobal: true,
+      envFilePath: ENV_FILE_PATH,
     }),
     MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: process.env.MONGO_URL,
-        dbName: process.env.MONGO_DB_NAME,
-        user: process.env.MONGO_DB_USER,
-        authMechanism: AuthMechanism.MONGODB_X509,
-        ssl: true,
-        tlsCertificateKeyFile: process.env.MONGO_CERT,
-        retryWrites: true,
-        authSource: '$external',
-        w: 'majority',
-        serverApi: ServerApiVersion.v1,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<EnvConfig>) => ({
+        authMechanism: AuthMechanism.MONGODB_DEFAULT,
+        // eslint-disable-next-line prettier/prettier
+        uri: `mongodb://${configService.get('MONGO_HOST')}:${configService.get('MONGO_PORT')}`,
+        dbName: configService.get('MONGO_DB_NAME'),
+        user: configService.get('MONGO_DB_USER'),
+        pass: configService.get('MONGO_DB_PASSWORD'),
       }),
     }),
     UserModule,

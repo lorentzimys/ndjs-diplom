@@ -1,6 +1,6 @@
-import 'dotenv/config';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
+import * as dotenv from 'dotenv';
 import * as session from 'express-session';
 import * as passport from 'passport';
 
@@ -13,7 +13,17 @@ import { RolesGuard } from '@common/guards';
 
 import { AppModule } from './app.module';
 
+export const environment = process.env.NODE_ENV || 'development';
+export const ENV_FILE_PATH = resolve(
+  __dirname,
+  '..',
+  'env',
+  `.${environment}.env`,
+);
+
 async function bootstrap() {
+  dotenv.config({ path: ENV_FILE_PATH });
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: true,
     cors: true,
@@ -34,7 +44,9 @@ async function bootstrap() {
   app.use(passport.session());
 
   await app.listen(process.env.HTTP_PORT);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log(
+    `Application is running on: ${await app.getUrl()} in ${environment} mode`,
+  );
 }
 
 bootstrap();
