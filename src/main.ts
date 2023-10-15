@@ -29,17 +29,20 @@ async function bootstrap() {
     cors: true,
   });
 
+  const sessionMiddleware = session({
+    secret: process.env.AUTH_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 60 * 1000 * 60 * 24 * 14,
+    },
+  });
+
   app.setGlobalPrefix(API_PREFIX);
   app.useGlobalGuards(new RolesGuard(app.get(Reflector)));
   app.useGlobalFilters(new MongoExceptionFilter());
   app.useStaticAssets(join(process.cwd(), PUBLIC_DIR));
-  app.use(
-    session({
-      secret: process.env.AUTH_SECRET,
-      resave: false,
-      saveUninitialized: false,
-    }),
-  );
+  app.use(sessionMiddleware);
   app.use(passport.initialize());
   app.use(passport.session());
 

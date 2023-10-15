@@ -26,7 +26,7 @@ interface ISupportRequestService {
   getMessages(supportRequest: ID): Promise<Message[]>;
   subscribe(
     handler: (supportRequest: SupportRequest, message: Message) => void,
-  ): () => void;
+  ): void;
 }
 
 interface ISupportRequestClientService {

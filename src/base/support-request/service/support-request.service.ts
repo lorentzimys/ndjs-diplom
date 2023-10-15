@@ -8,7 +8,7 @@ import { MessageDocument } from '../schema/message.schema';
 import { SupportRequestDocument } from '../schema/support-request.schema';
 
 @Injectable()
-export class SupportRequestService {
+export class SupportRequestService implements ISupportRequestService {
   constructor(
     @InjectModel(SupportRequest.name)
     private supportRequestModel: Model<SupportRequest>,
@@ -74,8 +74,19 @@ export class SupportRequestService {
   }
 
   subscribe(
-    handler: (supportRequest: SupportRequest, message: MessageDocument) => void,
-  ): () => void {
-    throw new Error('Method not implemented.');
+    handler: (
+      supportRequest: SupportRequestDocument,
+      message: MessageDocument,
+    ) => void,
+  ) {
+    const supportRequest = this.supportRequestModel.watch();
+
+    supportRequest.on('change', (change) => {
+      if (change.operationType === 'insert') {
+        const message = change.fullDocument.messages.pop();
+
+        handler(change.fullDocument, message);
+      }
+    });
   }
 }
